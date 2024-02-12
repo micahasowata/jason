@@ -5,16 +5,20 @@ import (
 
 	"github.com/micahasowata/jason"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
-	bodySize := 1
-	indentResponse := true
-	disallowUnknownFields := true
+	j := jason.Jason{
+		MaxBodySize:           1,
+		IndentResponse:        true,
+		DisallowUnknownFields: true,
+	}
 
 	constructedJason := jason.New(1, true, true)
 
-	assert.Equal(t, int64(bodySize), constructedJason.MaxBodySize)
-	assert.Equal(t, indentResponse, constructedJason.IndentResponse)
-	assert.Equal(t, disallowUnknownFields, constructedJason.DisallowUnknownFields)
+	require.EqualExportedValues(t, *constructedJason, j)
+	assert.Equal(t, j.MaxBodySize, constructedJason.MaxBodySize)
+	assert.Equal(t, j.IndentResponse, constructedJason.IndentResponse)
+	assert.Equal(t, j.DisallowUnknownFields, constructedJason.DisallowUnknownFields)
 }
