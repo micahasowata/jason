@@ -1,7 +1,6 @@
 package jason
 
 import (
-	"encoding/json"
 	"net/http"
 )
 
@@ -15,12 +14,12 @@ func (j *Jason) Write(w http.ResponseWriter, status int, data Envelope, headers 
 
 	switch {
 	case j.IndentResponse:
-		msg, err = json.MarshalIndent(data, "", "\t")
+		msg, err = j.parser.MarshalIndent(data, "", "\t")
 		if err != nil {
 			return err
 		}
 	default:
-		msg, err = json.Marshal(data)
+		msg, err = j.parser.Marshal(data)
 		if err != nil {
 			return err
 		}

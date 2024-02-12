@@ -33,7 +33,7 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 
 	r.Body = http.MaxBytesReader(w, r.Body, j.MaxBodySize)
 
-	dec := json.NewDecoder(r.Body)
+	dec := j.parser.NewDecoder(r.Body)
 
 	if j.DisallowUnknownFields {
 		dec.DisallowUnknownFields()
@@ -50,7 +50,7 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
 
 		case errors.Is(err, io.ErrUnexpectedEOF):
-			msg := fmt.Sprintf("Request body contains badly-formed JSON")
+			msg := "Request body contains badly-formed JSON"
 			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
 
 		case errors.As(err, &unmarshalTypeError):
