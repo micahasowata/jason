@@ -24,17 +24,17 @@ func ensureBodyIsJson(r *http.Request) error {
 }
 
 // Read parses the provided request body, triages possible errors and formats their message
-func (j Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	err := ensureBodyIsJson(r)
 	if err != nil {
 		return err
 	}
 
-	r.Body = http.MaxBytesReader(w, r.Body, j.MaxBodySize)
+	r.Body = http.MaxBytesReader(w, r.Body, j.maxBodySize)
 
 	dec := j.parser.NewDecoder(r.Body)
 
-	if j.DisallowUnknownFields {
+	if j.disallowUnknownFields {
 		dec.DisallowUnknownFields()
 	}
 
