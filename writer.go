@@ -8,7 +8,7 @@ import (
 type Envelope map[string]any
 
 // Write formats the response and writes it to the client
-func (j *Jason) Write(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
+func (j Jason) Write(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
 	var msg []byte
 	var err error
 

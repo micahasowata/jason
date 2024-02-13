@@ -11,8 +11,8 @@ type Jason struct {
 }
 
 // New constructs an instance of Jason with the provided settings
-func New(maxBodySize int64, indentResponse bool, disallowUnknownFields bool) *Jason {
-	return &Jason{
+func New(maxBodySize int64, indentResponse bool, disallowUnknownFields bool) Jason {
+	return Jason{
 		MaxBodySize:           maxBodySize,
 		IndentResponse:        indentResponse,
 		DisallowUnknownFields: disallowUnknownFields,
