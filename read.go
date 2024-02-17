@@ -14,6 +14,10 @@ const (
 	ContentTypeJSON = "application/json"
 )
 
+var (
+	ErrInvalidContentType = errors.New("jason: content type is not application/json")
+)
+
 // isBodyJSON ensures the media type of the request is set to application/json
 func isBodyJSON(r *http.Request) bool {
 	contentTypeHeader := r.Header.Get(ContentType)
@@ -25,7 +29,7 @@ func isBodyJSON(r *http.Request) bool {
 func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	ok := isBodyJSON(r)
 	if !ok {
-		return errors.New("jason: content type is not application/json")
+		return ErrInvalidContentType
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, j.maxBodySize)
@@ -75,7 +79,7 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 	}
 
 	err = dec.Decode(&struct{}{})
-	if err != io.EOF {
+	if !errors.Is(err, io.EOF) {
 		return errors.New("body must only contain a single JSON value")
 	}
 

@@ -2,6 +2,8 @@ package jason
 
 import (
 	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -40,4 +42,21 @@ func TestIsBodyJSON(t *testing.T) {
 			assert.Equal(t, tt.Want, got)
 		})
 	}
+}
+
+func TestRead(t *testing.T) {
+	var input struct {
+		Name string `json:"name"`
+	}
+
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest(http.MethodPost, "/", strings.NewReader(`{"name":"Jason"}`))
+	require.Nil(t, err)
+	r.Header.Set(ContentType, ContentTypeJSON)
+
+	j := New(100, false, true)
+	err = j.Read(w, r, &input)
+	require.Nil(t, err)
+
+	assert.Equal(t, "Jason", input.Name)
 }
