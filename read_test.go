@@ -10,6 +10,20 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func arrangeTest(t *testing.T, body string) (*Jason, http.ResponseWriter, *http.Request) {
+	t.Helper()
+	j := New(100, false, true)
+
+	w := httptest.NewRecorder()
+
+	req, err := http.NewRequest(http.MethodPost, "/", strings.NewReader(body))
+	require.Nil(t, err)
+
+	req.Header.Set(ContentType, ContentTypeJSON)
+
+	return j, w, req
+}
+
 func TestIsBodyJSON(t *testing.T) {
 	tests := []struct {
 		Name          string
@@ -49,13 +63,9 @@ func TestRead(t *testing.T) {
 		Name string `json:"name"`
 	}
 
-	w := httptest.NewRecorder()
-	r, err := http.NewRequest(http.MethodPost, "/", strings.NewReader(`{"name":"Jason"}`))
-	require.Nil(t, err)
-	r.Header.Set(ContentType, ContentTypeJSON)
+	j, w, r := arrangeTest(t, `{"name":"Jason"}`)
 
-	j := New(100, false, true)
-	err = j.Read(w, r, &input)
+	err := j.Read(w, r, &input)
 	require.Nil(t, err)
 
 	assert.Equal(t, "Jason", input.Name)
