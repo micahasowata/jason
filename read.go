@@ -9,25 +9,23 @@ import (
 	"strings"
 )
 
-func ensureBodyIsJson(r *http.Request) error {
-	ct := r.Header.Get("Content-Type")
-	switch {
-	case ct != "":
-		mediaType := strings.ToLower(strings.TrimSpace(strings.Split(ct, ";")[0]))
-		if mediaType != "application/json" {
-			return errors.New("content-type header is not application/json")
-		}
-	default:
-		return errors.New("no content-type detected")
-	}
-	return nil
+const (
+	ContentType     = "Content-Type"
+	ContentTypeJSON = "application/json"
+)
+
+// isBodyJSON ensures the media type of the request is set to application/json
+func isBodyJSON(r *http.Request) bool {
+	contentTypeHeader := r.Header.Get(ContentType)
+	mediaType := strings.ToLower(strings.TrimSpace(strings.Split(contentTypeHeader, ";")[0]))
+	return mediaType == ContentTypeJSON
 }
 
 // Read parses the provided request body, triages possible errors and formats their message
 func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
-	err := ensureBodyIsJson(r)
-	if err != nil {
-		return err
+	ok := isBodyJSON(r)
+	if !ok {
+		return errors.New("jason: content type is not application/json")
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, j.maxBodySize)
@@ -38,7 +36,7 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 		dec.DisallowUnknownFields()
 	}
 
-	err = dec.Decode(&dst)
+	err := dec.Decode(&dst)
 	if err != nil {
 		var syntaxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
@@ -61,7 +59,7 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 		case errors.Is(err, io.EOF):
 			return errors.New("body must not be empty")
 
-		case strings.HasPrefix(err.Error(), "json: unknown field"):
+		case strings.Contains(err.Error(), "ReadObject: found"):
 			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
 			return fmt.Errorf("body contains unknown field %s", fieldName)
 
