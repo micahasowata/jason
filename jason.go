@@ -16,6 +16,6 @@ func New(maxBodySize int64, indentResponse bool, disallowUnknownFields bool) *Ja
 		maxBodySize:           maxBodySize,
 		indentResponse:        indentResponse,
 		disallowUnknownFields: disallowUnknownFields,
-		parser:                jsoniter.ConfigCompatibleWithStandardLibrary,
+		parser:                jsoniter.ConfigFastest,
 	}
 }
