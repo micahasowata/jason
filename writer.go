@@ -14,7 +14,7 @@ func (j *Jason) Write(w http.ResponseWriter, status int, data Envelope, headers 
 
 	switch j.indentResponse {
 	case true:
-		msg, err = j.parser.MarshalIndent(data, "", "\t")
+		msg, err = j.parser.MarshalIndent(data, "", " ")
 		if err != nil {
 			return err
 		}
