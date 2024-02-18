@@ -129,12 +129,24 @@ func TestContentType(t *testing.T) {
 		Name string `json:"name"`
 	}
 
-	_, w, r := arrangeTest(t, ``)
-	j := New(100, false, false)
+	j, w, r := arrangeTest(t, ``)
 	r.Header.Set(ContentType, "text/html; charset=utf-8")
 
 	err := j.Read(w, r, &input)
 	require.NotNil(t, err)
 
 	assert.Equal(t, "content type is not application/json", err.Error())
+}
+
+func TestDestinationCheck(t *testing.T) {
+	var input struct {
+		Name string `json:"name"`
+	}
+
+	j, w, r := arrangeTest(t, ``)
+
+	err := j.Read(w, r, input)
+	require.NotNil(t, err)
+
+	assert.Equal(t, "destination is not a pointer", err.Error())
 }
