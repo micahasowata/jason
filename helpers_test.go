@@ -54,3 +54,11 @@ func TestFindErrorLocation(t *testing.T) {
 		assert.Equal(t, 0, got)
 	}
 }
+
+func TestGetFieldName(t *testing.T) {
+	input := "name=Jason"
+
+	got := getFieldName(input)
+
+	assert.Equal(t, "", got)
+}
