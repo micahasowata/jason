@@ -78,29 +78,34 @@ func TestReadErrors(t *testing.T) {
 		Want string
 	}{
 		{
-			Name: "syntax error",
+			Name: `syntax error`,
 			Body: `<?xml version="1.0" encoding="UTF-8"?><note><to>Jason</to></note>`,
-			Want: "request body contains badly formed JSON (at position 1)",
+			Want: `request body contains badly formed JSON (at position 1)`,
 		},
 		{
-			Name: "malformed body",
+			Name: `malformed body`,
 			Body: `{"name": "Jason", }`,
 			Want: `request body contains an invalid value for "name" (at character 10)`,
 		},
 		{
-			Name: "invalid body",
+			Name: `invalid body`,
 			Body: `["foo", "bar"]`,
 			Want: `request body contains badly formed JSON (at position 1)`,
 		},
 		{
-			Name: "invalid field value",
+			Name: `invalid field value`,
 			Body: `{"name": 123}'`,
 			Want: `request body contains an invalid value for "name" (at character 10)`,
 		},
 		{
-			Name: "empty body",
+			Name: `empty body`,
 			Body: ``,
 			Want: `request body must not be empty`,
+		},
+		{
+			Name: `double JSON objects`,
+			Body: `{"name":"Jason"}{"name":"Xoxo"}`,
+			Want: `request body must contain just one JSON object`,
 		},
 	}
 
