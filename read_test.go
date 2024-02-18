@@ -24,40 +24,6 @@ func arrangeTest(t *testing.T, body string) (*Jason, http.ResponseWriter, *http.
 	return j, w, req
 }
 
-func TestIsBodyJSON(t *testing.T) {
-	tests := []struct {
-		Name          string
-		AddJSONHeader bool
-		Want          bool
-	}{
-		{
-			Name:          "valid content type header",
-			AddJSONHeader: true,
-			Want:          true,
-		},
-		{
-			Name:          "invalid content type header",
-			AddJSONHeader: false,
-			Want:          false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.Name, func(t *testing.T) {
-			r, err := http.NewRequest(http.MethodPost, "/", nil)
-			require.Nil(t, err)
-
-			if tt.AddJSONHeader {
-				r.Header.Set(ContentType, ContentTypeJSON)
-			}
-
-			got := isBodyJSON(r)
-
-			assert.Equal(t, tt.Want, got)
-		})
-	}
-}
-
 func TestRead(t *testing.T) {
 	var input struct {
 		Name string `json:"name"`
@@ -71,7 +37,7 @@ func TestRead(t *testing.T) {
 	assert.Equal(t, "Jason", input.Name)
 }
 
-func TestReadErrors(t *testing.T) {
+func TestRequestBodyErrors(t *testing.T) {
 	tests := []struct {
 		Name string
 		Body string
@@ -124,7 +90,7 @@ func TestReadErrors(t *testing.T) {
 	}
 }
 
-func TestContentType(t *testing.T) {
+func TestRequestBodyContentTypeChecker(t *testing.T) {
 	var input struct {
 		Name string `json:"name"`
 	}
@@ -138,7 +104,7 @@ func TestContentType(t *testing.T) {
 	assert.Equal(t, "content type is not application/json", err.Error())
 }
 
-func TestDestinationCheck(t *testing.T) {
+func TestRequestBodyDestinationChecker(t *testing.T) {
 	var input struct {
 		Name string `json:"name"`
 	}
@@ -151,7 +117,7 @@ func TestDestinationCheck(t *testing.T) {
 	assert.Equal(t, "destination is not a pointer", err.Error())
 }
 
-func TestDisallowUnknownFields(t *testing.T) {
+func TestRequestBodyUnknownFieldsChecker(t *testing.T) {
 	var input struct {
 		Name string `json:"name"`
 	}
@@ -165,7 +131,7 @@ func TestDisallowUnknownFields(t *testing.T) {
 	assert.Equal(t, `request body contains an invalid value for "another_name" (at character 10)`, err.Error())
 }
 
-func TestLargeBody(t *testing.T) {
+func TestRequestBodySizeChecker(t *testing.T) {
 	var input struct {
 		Name string `json:"name"`
 	}
