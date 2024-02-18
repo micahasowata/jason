@@ -1,53 +1,64 @@
 ## jason
 
-jason is a convenience package that provides proper error handling while working with JSON APIs
+This package is a product of [this article by Alex Edwards](https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body) and [jsoniter](https://github.com/json-iterator/go)
 
-### install
-
-- install the package in a project with a valid [go.mod](https://go.dev/doc/modules/gomod-ref) file
-
-```shell
-$ go get github.com/micahasowata/jason@latest
-```
-
-- use it to read and write json
+### Installation 📥
 
 ```go
+go get github.com/micahasowata/jason@latest
+```
 
+### Quick Start 💨
+
+```go
 package main
 
 import (
-    "github.com/micahasowata/jason"
+	"log"
+	"net/http"
+
+	"github.com/micahasowata/jason"
 )
 
 func main() {
-   j := jason.New(100, true, true)
+	j := jason.New(100, true, true)
 
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
-        var input struct {
-            Name string `json:"name"`
-        }
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		var input struct {
+			Name string `json:"name"`
+		}
 
-        err := j.Read(w, r, &input)
-        if err != nil {
-            http.Error(w, err.Error, http.StatusBadRequest)
-            return
-        }
+		err := j.Read(w, r, &input)
+		if err != nil {
+			e, ok := err.(*jason.Err)
+			if !ok {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			http.Error(w, e.Error(), e.Code)
+			return
+		}
 
-        err := j.Write(w, http.StatusOK, jason.Envelope{"input", input}, nil)
-        if err != nil {
-            http.Error(w, err.Error, http.StatusInternalServerError)
-            return
-        }
-    })
+		err = j.Write(w, http.StatusOK, jason.Envelope{"data": input}, nil)
+		if err != nil {
+			e, ok := err.(*jason.Err)
+			if !ok {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			http.Error(w, e.Error(), e.Code)
+			return
+		}
+	})
 
-   http.ListenAndServe(":8000", nil)
+	log.Println("server started")
+	http.ListenAndServe(":8000", nil)
 }
+
 ```
 
-## Contribution
+## Contribution 🗳️
 
-this package is not in its best possible shape
-there is a need for tests and better documentation so if you can contribute that, please do so.
+If you run into any issues while using this library or you notice any area where it can be improved feel free to create a pull request and be sure that it would not be ignored
 
-Thank you
+Happy Hacking ❗❗❗❗
