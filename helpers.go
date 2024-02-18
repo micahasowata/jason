@@ -9,14 +9,10 @@ import (
 	"strings"
 )
 
-type Err struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-func (e *Err) Error() string {
-	return e.Msg
-}
+const (
+	ContentType     = "Content-Type"
+	ContentTypeJSON = "application/json"
+)
 
 // isBodyJSON ensures the media type of the request is set to application/json
 func isBodyJSON(r *http.Request) bool {

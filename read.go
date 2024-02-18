@@ -7,10 +7,14 @@ import (
 	"net/http"
 )
 
-const (
-	ContentType     = "Content-Type"
-	ContentTypeJSON = "application/json"
-)
+type Err struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+func (e *Err) Error() string {
+	return e.Msg
+}
 
 // Read parses the provided request body, triages possible errors and formats their message
 func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
