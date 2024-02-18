@@ -18,3 +18,14 @@ func TestWriteWithoutIndentation(t *testing.T) {
 
 	assert.Equal(t, ContentTypeJSON, w.Header().Get(ContentType))
 }
+
+func TestWriteWithIndentation(t *testing.T) {
+	_, w, _ := arrangeTest(t, "")
+
+	j := New(5, true, true)
+
+	err := j.Write(w, http.StatusOK, Envelope{"name": "Jason"}, nil)
+	require.Nil(t, err)
+
+	assert.Equal(t, ContentTypeJSON, w.Header().Get(ContentType))
+}
