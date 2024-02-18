@@ -123,3 +123,18 @@ func TestReadErrors(t *testing.T) {
 		})
 	}
 }
+
+func TestContentType(t *testing.T) {
+	var input struct {
+		Name string `json:"name"`
+	}
+
+	_, w, r := arrangeTest(t, ``)
+	j := New(100, false, false)
+	r.Header.Set(ContentType, "text/html; charset=utf-8")
+
+	err := j.Read(w, r, &input)
+	require.NotNil(t, err)
+
+	assert.Equal(t, "content type is not application/json", err.Error())
+}
