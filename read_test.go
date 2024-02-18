@@ -70,3 +70,51 @@ func TestRead(t *testing.T) {
 
 	assert.Equal(t, "Jason", input.Name)
 }
+
+func TestReadErrors(t *testing.T) {
+	tests := []struct {
+		Name string
+		Body string
+		Want string
+	}{
+		{
+			Name: "syntax error",
+			Body: `<?xml version="1.0" encoding="UTF-8"?><note><to>Jason</to></note>`,
+			Want: "request body contains badly formed JSON (at position 1)",
+		},
+		{
+			Name: "malformed body",
+			Body: `{"name": "Jason", }`,
+			Want: `request body contains an invalid value for "name" (at character 10)`,
+		},
+		{
+			Name: "invalid body",
+			Body: `["foo", "bar"]`,
+			Want: `request body contains badly formed JSON (at position 1)`,
+		},
+		{
+			Name: "invalid field value",
+			Body: `{"name": 123}'`,
+			Want: `request body contains an invalid value for "name" (at character 10)`,
+		},
+		{
+			Name: "empty body",
+			Body: ``,
+			Want: `request body must not be empty`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			var input struct {
+				Name string `json:"name"`
+			}
+
+			j, w, r := arrangeTest(t, tt.Body)
+			err := j.Read(w, r, &input)
+			require.NotNil(t, err)
+
+			assert.Equal(t, tt.Want, err.Error())
+		})
+	}
+}
