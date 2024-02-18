@@ -41,3 +41,11 @@ func TestIsBodyJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestFindErrorLocation(t *testing.T) {
+	input := "malformed body"
+
+	got := findErrorLocation(input)
+
+	assert.Equal(t, 0, got)
+}
