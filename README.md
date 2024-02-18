@@ -61,4 +61,4 @@ func main() {
 
 If you run into any issues while using this library or you notice any area where it can be improved feel free to create a pull request and be sure that it would not be ignored
 
-Happy Hacking ❗❗❗❗
+Happy Hacking ⚡⚡⚡
