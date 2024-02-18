@@ -26,7 +26,7 @@ func isDstPointer(dst interface{}) bool {
 }
 
 func isBodyTooLarge(err error) bool {
-	return bytes.Contains([]byte(err.Error()), []byte(": http: request body too large"))
+	return bytes.Contains([]byte(err.Error()), []byte("http: request body too large"))
 }
 
 func isBadlyFormedJSON(err error) bool {
