@@ -16,12 +16,12 @@ func (j *Jason) Write(w http.ResponseWriter, status int, data Envelope, headers 
 	case true:
 		msg, err = j.parser.MarshalIndent(data, "", " ")
 		if err != nil {
-			return err
+			return &Err{Code: http.StatusInternalServerError, Msg: err.Error()}
 		}
 	default:
 		msg, err = j.parser.Marshal(data)
 		if err != nil {
-			return err
+			return &Err{Code: http.StatusInternalServerError, Msg: err.Error()}
 		}
 	}
 
