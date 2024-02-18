@@ -150,3 +150,17 @@ func TestDestinationCheck(t *testing.T) {
 
 	assert.Equal(t, "destination is not a pointer", err.Error())
 }
+
+func TestDisallowUnknownFields(t *testing.T) {
+	var input struct {
+		Name string `json:"name"`
+	}
+
+	_, w, r := arrangeTest(t, `{"another_name": "Xoxo"}`)
+	j := New(100, false, true)
+
+	err := j.Read(w, r, &input)
+	require.NotNil(t, err)
+
+	assert.Equal(t, `request body contains an invalid value for "another_name" (at character 10)`, err.Error())
+}
