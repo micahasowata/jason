@@ -27,16 +27,24 @@ import (
 	"net/http"
 )
 
+// Err represents an error with an associated code and message
 type Err struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	// Code is the recommended error code for error handling. It represents an HTTP status code,
+	// providing guidance on how to handle the error, such as returning it to the client or logging it.
+	Code int `json:"code"`
+
+	// Msg contains the error message, providing detailed information about the encountered error.
+	Msg string `json:"msg"`
 }
 
+// Error implements the error interface for Err, returning its message.
 func (e *Err) Error() string {
 	return e.Msg
 }
 
-// Read parses the provided request body, triages possible errors and formats their message
+// Read reads JSON data from the request body and decodes it into the provided destination interface.
+// It checks the content type of the request and ensures that the destination is a pointer.
+// Additionally, it sets limits on the request body size and handles various decoding errors.
 func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	ok := isBodyJSON(r)
 	if !ok {

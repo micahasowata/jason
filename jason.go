@@ -22,7 +22,7 @@ package jason
 
 import jsoniter "github.com/json-iterator/go"
 
-// Jason holds configuration settings for parsing and sending objects
+// Jason represents a configuration for handling JSON requests and responses
 type Jason struct {
 	maxBodySize           int64
 	indentResponse        bool
@@ -30,7 +30,7 @@ type Jason struct {
 	parser                jsoniter.API
 }
 
-// New constructs an instance of Jason with the provided settings
+// New creates a new Jason instance with the specified configuration parameters.
 func New(maxBodySize int64, indentResponse bool, disallowUnknownFields bool) *Jason {
 	return &Jason{
 		maxBodySize:           maxBodySize,

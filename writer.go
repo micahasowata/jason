@@ -24,10 +24,14 @@ import (
 	"net/http"
 )
 
-// Envelope is the jason equivalent of gin.H
+// Envelope wraps JSON data for marshalling purposes, guarding against subtle JSON vulnerabilities.
+// For more information, refer to: https://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/
 type Envelope map[string]any
 
-// Write formats the response and writes it to the client
+// Write writes the JSON representation of the provided Envelope data to the given http.ResponseWriter.
+// It sets the HTTP status code, headers, and writes the JSON data.
+// If indentation is enabled, it marshals data with indentation. Otherwise, it marshals data without indentation.
+// The provided headers are set to the response writer before writing the data.
 func (j *Jason) Write(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
 	var msg []byte
 	var err error
