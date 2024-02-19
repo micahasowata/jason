@@ -16,7 +16,7 @@ go get github.com/micahasowata/jason@latest
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/micahasowata/jason"
@@ -53,7 +53,7 @@ func main() {
 		}
 	})
 
-	log.Println("server started")
+	slog.Info("server started")
 	http.ListenAndServe(":8000", nil)
 }
 
