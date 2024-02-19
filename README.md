@@ -1,5 +1,7 @@
 ## jason
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/micahasowata/jason.svg)](https://pkg.go.dev/github.com/micahasowata/jason) [![Go Report Card](https://goreportcard.com/badge/github.com/micahasowata/jason)](https://goreportcard.com/report/github.com/micahasowata/jason)
+
 This package is a product of [this article by Alex Edwards](https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body) and [jsoniter](https://github.com/json-iterator/go)
 
 ### Installation 📥
