@@ -164,3 +164,14 @@ func TestRequestBodySizeChecker(t *testing.T) {
 
 	assert.Equal(t, "request body must not be larger than 5", err.Error())
 }
+
+func TestUnknownErrorCatcher(t *testing.T) {
+	var input struct {
+		Age int `json:"age"`
+	}
+
+	j, w, r := arrangeTest(t, `{"age": 14.5}`)
+
+	err := j.Read(w, r, &input)
+	require.NotNil(t, err)
+}
