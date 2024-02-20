@@ -148,7 +148,7 @@ func TestRequestBodyUnknownFieldsChecker(t *testing.T) {
 	err := j.Read(w, r, &input)
 	require.NotNil(t, err)
 
-	assert.Equal(t, `request body contains an invalid value for "another_name" (at character 10)`, err.Error())
+	assert.Equal(t, `request body contains unknown field "another_name"`, err.Error())
 }
 
 func TestRequestBodySizeChecker(t *testing.T) {
@@ -163,4 +163,15 @@ func TestRequestBodySizeChecker(t *testing.T) {
 	require.NotNil(t, err)
 
 	assert.Equal(t, "request body must not be larger than 5", err.Error())
+}
+
+func TestUnknownErrorCatcher(t *testing.T) {
+	var input struct {
+		Age int `json:"age"`
+	}
+
+	j, w, r := arrangeTest(t, `{"age": 14.5}`)
+
+	err := j.Read(w, r, &input)
+	require.NotNil(t, err)
 }
