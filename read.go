@@ -69,12 +69,12 @@ func (j *Jason) Read(w http.ResponseWriter, r *http.Request, dst interface{}) er
 		switch {
 		case isEmpty(err):
 			return &Err{Code: http.StatusBadRequest, Msg: "request body must not be empty"}
+		case j.disallowUnknownFields && isUnknownField(err):
+			return &Err{Code: http.StatusBadRequest, Msg: fmt.Sprintf("request body contains unknown field %s", getFieldName(getStmt(err.Error())))}
 		case containsImproperAssignment(err):
 			return &Err{Code: http.StatusBadRequest, Msg: fmt.Sprintf("request body contains an invalid value for %s (at character %d)", getFieldName(getStmt(err.Error())), findErrorLocation(err.Error()))}
 		case isBadlyFormedJSON(err):
 			return &Err{Code: http.StatusBadRequest, Msg: fmt.Sprintf("request body contains badly formed JSON (at position %d)", findErrorLocation(err.Error()))}
-		case j.disallowUnknownFields && isUnknownField(err):
-			return &Err{Code: http.StatusBadRequest, Msg: fmt.Sprintf("request body contains unknown field %s", getFieldName(getStmt(err.Error())))}
 		case isBodyTooLarge(err):
 			return &Err{Code: http.StatusRequestEntityTooLarge, Msg: fmt.Sprintf("request body must not be larger than %d", j.maxBodySize)}
 		default:

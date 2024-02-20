@@ -148,7 +148,7 @@ func TestRequestBodyUnknownFieldsChecker(t *testing.T) {
 	err := j.Read(w, r, &input)
 	require.NotNil(t, err)
 
-	assert.Equal(t, `request body contains an invalid value for "another_name" (at character 10)`, err.Error())
+	assert.Equal(t, `request body contains unknown field "another_name"`, err.Error())
 }
 
 func TestRequestBodySizeChecker(t *testing.T) {
