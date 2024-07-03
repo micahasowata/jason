@@ -15,7 +15,6 @@ func TestNonPointerDestination(t *testing.T) {
 
 func TestInvalidContentType(t *testing.T) {
 	parser, w, r := setupTest(t, "")
-
 	r.Header.Set("Content-Type", "text/plain")
 
 	err := parser.Read(w, r, map[string]any{})
@@ -25,7 +24,7 @@ func TestInvalidContentType(t *testing.T) {
 }
 
 func TestVeryLargeBody(t *testing.T) {
-	parser, w, r := setupTest(t, `{"name": "heyy"}`)
+	parser, w, r := setupTest(t, `{"name": "jason"}`)
 	parser.Limit = 2
 	r.Header.Set("Content-Type", "application/json")
 

@@ -21,3 +21,10 @@ func setupTest(t *testing.T, body string) (*Parser, http.ResponseWriter, *http.R
 
 	return parser, w, r
 }
+
+func TestNewParser(t *testing.T) {
+	parser := NewParser(0, false)
+	if parser.Limit < 1 {
+		t.Fatal("parser limit checks not handled properly")
+	}
+}
