@@ -6,22 +6,24 @@ const ContentType = "application/json"
 
 // Parser holds parsing configuration.
 type Parser struct {
-	Indent             bool
-	AllowUnknownFields bool
-	Limit              int
+	Indent bool
+	Limit  int
 }
 
 // NewParser creates a new Parser
-func NewParser(limit int, indent bool, allowUnknownFields bool) *Parser {
+func NewParser(limit int, indent bool) *Parser {
+	if limit < 1 {
+		limit = 1
+	}
+
 	return &Parser{
-		Limit:              limit,
-		Indent:             indent,
-		AllowUnknownFields: allowUnknownFields,
+		Limit:  limit,
+		Indent: indent,
 	}
 }
 
 // Default creates instantiates a Parser that can read up to 10MB (10485760 bytes) of data,
 // doesn't indent response and disallows unknown fields
 func Default() *Parser {
-	return NewParser(OneMB*10, false, false)
+	return NewParser(OneMB, false)
 }
