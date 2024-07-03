@@ -33,6 +33,7 @@ func indent(w http.ResponseWriter, status int, data any) error {
 	return nil
 }
 
+// Write writes the provided data to w along with the status
 func (p *Parser) Write(w http.ResponseWriter, status int, data any) error {
 	if status < 100 || status > 511 {
 		status = 200

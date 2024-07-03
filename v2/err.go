@@ -1,6 +1,6 @@
 package v2
 
-// Err implements the error interface
+// Err is the underlying type of the error return from calling any Parser methods
 type Err struct {
 	Code    int
 	message string

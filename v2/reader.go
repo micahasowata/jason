@@ -39,6 +39,7 @@ func getTypeError(err error) string {
 	return fmt.Sprintf("body contains invalid value type at character %d", unmarshalErr.Offset)
 }
 
+// Read reads values from input stream
 func (p *Parser) Read(w http.ResponseWriter, r *http.Request, dst any) error {
 	hasCorrectDst := isDstPointer(dst)
 	if !hasCorrectDst {
