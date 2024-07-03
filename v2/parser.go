@@ -1,8 +1,8 @@
 package v2
 
-const (
-	OneMB = 1048576
-)
+const OneMB = 1048576
+
+const ContentType = "application/json"
 
 // Parser holds parsing configuration.
 type Parser struct {
