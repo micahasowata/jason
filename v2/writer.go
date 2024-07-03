@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+type Envelope map[string]any
+
 func getUnsupportedType(err error) string {
 	marshalErr, ok := err.(*json.UnsupportedTypeError)
 	if !ok {
