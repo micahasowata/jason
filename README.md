@@ -6,7 +6,7 @@ jason is a zero dependency http library wrapper for JSON.
 
 ## Installation 📥
 
-```go
+```sh
 go get github.com/micahasowata/jason/v2@latest
 ```
 
